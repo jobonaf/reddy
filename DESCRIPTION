@@ -1,9 +1,9 @@
 Package: reddy
 Type: Package
-Title: What the package does (short line)
+Title: Utility to manage EddyPro output
 Version: 0.1
-Date: 2013-11-14
+Date: 2013-12-13
 Author: G.Bonafe'
 Maintainer: G.Bonafe' <gbonafe@arpa.emr.it>
 Description: Utility to manage EddyPro output
-License: What license is it under?
+License: GPL-2
