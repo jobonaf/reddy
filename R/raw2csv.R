@@ -75,6 +75,7 @@ multi_raw2csv <- function(filecfg=select.list(dir("dat/",
                           dir_raw=paste0("raw/",dirname <- select.list(dir("raw/",full.names = F),
                                               title = "Raw data directory?")),
                           dir_csv=paste0("out/",dirname)) {
+  read_cfg(filecfg)
   readline(prompt = paste0("I'll read raw data from directory ",dir_raw,
                            "\nand write CSV with converted data into directory ",dir_csv,
                            ". Is it ok? (y/n)")) -> ok
@@ -93,7 +94,27 @@ multi_raw2csv <- function(filecfg=select.list(dir("dat/",
     }
     if(ok %in% c("Y","y")) {
       files <- dir(path = dir_raw, pattern = "txt")
-      for (fileraw in files) single_raw2csv(fileraw = fileraw, dir_raw = dir_raw, dir_csv = dir_csv)
+      start.time <- Sys.time()
+      i=0
+      for (fileraw in files) {
+        i=i+1
+        single_raw2csv(fileraw = fileraw, 
+                       dir_raw = dir_raw, 
+                       dir_csv = dir_csv)
+        new.time <- Sys.time()
+        end.time <- start.time+(new.time-start.time)/i*length(files)
+        cat(paste("estimated time of completion:",end.time),sep = "\n")
+        dm <- difftime(end.time,new.time,units="min")
+        dh <- difftime(end.time,new.time,units="hour")
+        if(dm>120) {
+          dt <- dh; un<-"hour[s]"
+        } else {
+          dt <- dm; un<-"minute[s]"
+        }
+        cat(paste("remaining time: approx.", 
+                  signif(dt,2), un), 
+            sep = "\n")        
+      }
     }
   }
 }
