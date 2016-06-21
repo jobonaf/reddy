@@ -16,15 +16,15 @@ read_cfg <- function(filecfg="dat/SPC.20151222.cfg") {
   for (i in 1:length(cfg)) eval(parse(text=cfg[i]))
 }
 
-read_raw <- function(fileraw="raw/test/78665.txt") {
+read_raw <- function(fileraw="raw/test/80359.txt") {
   raw <- scan(fileraw, sep = "\n", what="")
-  raw <- gsub("M:","",raw[grep("M:",raw)])
-  first <- grep("x",raw[1:3])[1]
-  nr <- length(raw)
-  last <- nr-3+rev(grep("e8",raw[(nr-2):nr]))[1]
-  raw <- paste(raw[seq(first,last-1,by = 2)],
-               raw[seq(first+1,last,by = 2)])
-  nr <- length(raw)
+  i1 <- grep(x = raw, pattern = ":x =")
+  i2 <- grep(x = raw, pattern = "e8=")
+  i2 <- intersect(i1+1, i2)
+  i1 <- intersect(i2-1, i1)
+  l1 <- gsub(pattern = "[A-Z]:", replacement = "", x = raw[i1])
+  l2 <- gsub(pattern = "[A-Z]:", replacement = "", x = raw[i2])
+  raw <- paste(l1,l2)
   ff <- function(x) as.numeric(substring(x,(0:7)*10+4,(0:7)*10+9))
   out <- matrix(unlist(lapply(raw, FUN = ff)), ncol = 8, byrow = T)
   return(out)
@@ -112,7 +112,7 @@ multi_raw2csv <- function(filecfg=select.list(dir("dat/",
           dt <- dm; un<-"minute[s]"
         }
         cat(paste("remaining time: approx.", 
-                  signif(dt,2), un), 
+                  round(signif(dt,2),1), un), 
             sep = "\n")        
       }
     }
