@@ -25,6 +25,7 @@ read_raw <- function(fileraw="raw/test/80359.txt") {
   l1 <- gsub(pattern = "[A-Z]:", replacement = "", x = raw[i1])
   l2 <- gsub(pattern = "[A-Z]:", replacement = "", x = raw[i2])
   raw <- paste(l1,l2)
+  raw <- raw[nchar(raw)==79]
   ff <- function(x) as.numeric(substring(x,(0:7)*10+4,(0:7)*10+9))
   out <- matrix(unlist(lapply(raw, FUN = ff)), ncol = 8, byrow = T)
   return(out)
